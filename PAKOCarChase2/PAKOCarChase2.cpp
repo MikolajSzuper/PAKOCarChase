@@ -49,6 +49,8 @@ int main()
 
         player.update();
 
+        player1.update();
+
         bool contact = 0;
         for (int i = 0; i < 10; i++) if (!contact) contact = player.Contact(obs[i].getObstacle());
         if (contact) player.stop = 0; else player.stop = 1;
@@ -56,6 +58,9 @@ int main()
         {
             obs[i].whenPlayerMove(map.getPos());
         }
+
+        player1.whenPlayerMove(map.getPos());
+
 
         //Draw//
         app.clear(Color::White);

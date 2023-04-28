@@ -9,8 +9,6 @@ protected:
     sf::Texture tex;
     sf::Sprite model;
     sf::Vector2u border;
-    float x = 320, y = 240;
-    float offsetX = 0, offsetY = 0;
     float speed = 0, angle = 0;
     float maxSpeed = 6.0;
     float acc = 0.2, dec = 0.3;
@@ -19,10 +17,8 @@ protected:
 public:
     bool stop = 1;
     Car(std::string _tex, sf::Vector2u _border);
-    void update();
     void move(std::string);
     sf::Sprite& getPlayer();
-    sf::Vector2f getPos();
     void Stop();
     bool Contact(sf::Sprite& obj);
 };
