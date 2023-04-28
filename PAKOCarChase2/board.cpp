@@ -8,7 +8,6 @@ Board::Board(std::string _tex) {
 
 void Board::whenPlayerMove(sf::Vector2f pos) {
 		background.setPosition(pos);
-		//std::cout << pos.x <<" "<<pos.y << std::endl;
 }
 
 sf::Sprite& Board::getMap() {
