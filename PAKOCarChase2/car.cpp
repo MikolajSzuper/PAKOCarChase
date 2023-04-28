@@ -12,7 +12,6 @@ Car::Car(std::string _tex, sf::Vector2f pos, sf::Vector2u _border) {
 }
 
 void Car::update() {
-    if (stop) {
         if (speed < maxSpeed)
             if (speed < 0) speed += dec;
             else speed += acc;
@@ -21,10 +20,10 @@ void Car::update() {
         if (Right && speed != 0) angle += turnSpeed * speed / maxSpeed;
         if (Left && speed != 0) angle -= turnSpeed * speed / maxSpeed;
         
-        if (x + sin(angle) * speed > 0 && x + sin(angle) * speed < ((float)border.x + 550)) {
+        if (stop && x + sin(angle) * speed > 0 && x + sin(angle) * speed < ((float)border.x + 550)) {
             x += sin(angle) * speed;
         }
-        if (y - cos(angle) * speed > 0 && y - cos(angle) * speed < ((float)border.y + 550)) {
+        if (stop && y - cos(angle) * speed > 0 && y - cos(angle) * speed < ((float)border.y + 550)) {
             y -= cos(angle) * speed;
         }
 
@@ -35,7 +34,6 @@ void Car::update() {
         Right = 0;
         Left = 0;
         Down = 1;
-    }
 
 }
 
@@ -65,8 +63,8 @@ void Car::Stop() {
 }
 
 void Car::Contact(sf::RectangleShape obj) {
-    if (model.getGlobalBounds().intersects(obj.getGlobalBounds()))
-    {
-        stop = 0;
-    }
+    sf::FloatRect bump;
+    bump = model.getGlobalBounds();
+    bump.height = bump.height + 4;
+    if (bump.intersects(obj.getGlobalBounds())) stop = 0; else stop = 1;
 }
