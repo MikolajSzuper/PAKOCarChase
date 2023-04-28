@@ -62,9 +62,10 @@ void Car::Stop() {
     if (stop) stop = 0; else stop = 1;
 }
 
-void Car::Contact(sf::RectangleShape obj) {
+bool Car::Contact(sf::RectangleShape& obj) {
     sf::FloatRect bump;
     bump = model.getGlobalBounds();
     bump.height = bump.height + 4;
-    if (bump.intersects(obj.getGlobalBounds())) stop = 0; else stop = 1;
+    if (bump.intersects(obj.getGlobalBounds())) return 1;
+    return 0;
 }

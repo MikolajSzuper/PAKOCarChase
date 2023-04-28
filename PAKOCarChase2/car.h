@@ -16,13 +16,13 @@ private:
     float acc = 0.2, dec = 0.3;
     float turnSpeed = 0.1;
     bool Down = 0, Right = 0, Left = 0;
-    bool stop = 1;
 public:
+    bool stop = 1;
     Car(std::string _tex, sf::Vector2f pos, sf::Vector2u _border);
     void update();
     void move(std::string);
     sf::Sprite& getPlayer();
     sf::Vector2f getPos();
     void Stop();
-    void Contact(sf::RectangleShape obj);
+    bool Contact(sf::RectangleShape& obj);
 };
