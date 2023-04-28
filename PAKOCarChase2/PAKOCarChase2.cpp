@@ -1,8 +1,10 @@
 ﻿#include <SFML/Graphics.hpp>
 #include <iostream>
 #include "car.h"
+#include "player.h"
 #include "board.h"
 #include "obstacle.h"
+#include "ai.h"
 
 using namespace sf;
 int main()
@@ -10,7 +12,8 @@ int main()
     RenderWindow app(VideoMode(640, 480), "Pako Car Game");
     app.setFramerateLimit(60);
     Board map("assets/grass.png");
-    Car player("assets/car.png",Vector2f(app.getSize().x/2, app.getSize().y/2), map.getBorder());
+    Player player("assets/car.png",Vector2f(app.getSize().x/2, app.getSize().y/2), map.getBorder());
+    Ai player1("assets/police.png", map.getBorder());
     srand(time(NULL));
     Obstacle obs[10];
     int j = 0;
@@ -66,6 +69,7 @@ int main()
         }
 
         app.draw(player.getPlayer());
+        app.draw(player1.getPlayer());
         app.display();
     }
 

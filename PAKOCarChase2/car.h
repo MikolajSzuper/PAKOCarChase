@@ -5,7 +5,7 @@
 
 class Car
 {
-private:
+protected:
     sf::Texture tex;
     sf::Sprite model;
     sf::Vector2u border;
@@ -18,11 +18,11 @@ private:
     bool Down = 0, Right = 0, Left = 0;
 public:
     bool stop = 1;
-    Car(std::string _tex, sf::Vector2f pos, sf::Vector2u _border);
+    Car(std::string _tex, sf::Vector2u _border);
     void update();
     void move(std::string);
     sf::Sprite& getPlayer();
     sf::Vector2f getPos();
     void Stop();
-    bool Contact(sf::RectangleShape& obj);
+    bool Contact(sf::Sprite& obj);
 };
