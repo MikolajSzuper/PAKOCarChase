@@ -35,6 +35,6 @@ bool Car::Contact(sf::Sprite& obj) {
     bump = obj.getGlobalBounds();
     bump.width = bump.width - 5;
     bump.height = bump.height - 5;
-    if (model.getGlobalBounds().intersects(bump)) return 1;
+    if (sensor.getGlobalBounds().intersects(bump)) return 1;
     return 0;
 }

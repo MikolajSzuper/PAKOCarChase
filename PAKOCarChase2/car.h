@@ -6,9 +6,11 @@
 class Car
 {
 protected:
+    sf::CircleShape sensor;
     sf::Texture tex;
     sf::Sprite model;
     sf::Vector2u border;
+    sf::Vector2f sensor_pos;
     float speed = 0, angle = 0;
     float maxSpeed = 6.0;
     float acc = 0.2, dec = 0.3;

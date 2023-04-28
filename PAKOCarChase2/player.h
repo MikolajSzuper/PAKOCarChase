@@ -9,5 +9,6 @@ public:
 	Player(std::string _tex, sf::Vector2f pos, sf::Vector2u _border);
 	void update();
 	sf::Vector2f getPos();
+	sf::CircleShape& getSensor();
 };
 
