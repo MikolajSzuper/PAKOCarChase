@@ -1,5 +1,6 @@
 #pragma once
 #include "car.h"
+#include "obstacle.h"
 class Ai : public Car
 {
 private:
@@ -8,6 +9,6 @@ public:
 	Ai(std::string _tex, sf::Vector2u _border);
 	void whenPlayerMove(sf::Vector2f _pos);
 	void getPos();
-	void update();
+	void update(sf::Sprite& map, Obstacle*& obs,sf::Vector2f pos);
 };
 

@@ -47,13 +47,12 @@ int main()
         if (Keyboard::isKeyPressed(Keyboard::Left)) player.move("LEFT");
         if (Keyboard::isKeyPressed(Keyboard::Space)) player.Stop();
 
-        player.update();
+        Obstacle* wsk_obs = *&obs;
 
-        player1.update();
+        player.update(map.getMap(),wsk_obs);
 
-        bool contact = 0;
-        for (int i = 0; i < 10; i++) if (!contact) contact = player.Contact(obs[i].getObstacle());
-        if (contact) player.stop = 0; else player.stop = 1;
+        player1.update(map.getMap(),wsk_obs,player.getPosToPolice());
+
         for (int i = 0; i < 10; i++)
         {
             obs[i].whenPlayerMove(map.getPos());
@@ -75,6 +74,7 @@ int main()
 
         app.draw(player.getPlayer());
         app.draw(player1.getPlayer());
+        //app.draw(player.getSensor());
         app.display();
     }
 

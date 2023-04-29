@@ -1,12 +1,13 @@
 #pragma once
 #include <iostream>
 #include "SFML/Graphics.hpp"
+#include "obstacle.h"
 
 
 class Car
 {
 protected:
-    sf::CircleShape sensor;
+    sf::RectangleShape sensor;
     sf::Texture tex;
     sf::Sprite model;
     sf::Vector2u border;
@@ -24,5 +25,6 @@ public:
     sf::Sprite& getPlayer();
     void Stop();
     bool Contact(sf::Sprite& obj);
-    void moving();
+    void moving(sf::Sprite& map, Obstacle*& obs);
+    sf::RectangleShape& getSensor();
 };
