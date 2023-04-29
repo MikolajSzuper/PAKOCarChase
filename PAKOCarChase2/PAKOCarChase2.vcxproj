@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="ai.cpp" />
     <ClCompile Include="board.cpp" />
+    <ClCompile Include="button.cpp" />
     <ClCompile Include="car.cpp" />
     <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="PAKOCarChase2.cpp" />
@@ -149,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="ai.h" />
     <ClInclude Include="board.h" />
+    <ClInclude Include="button.h" />
     <ClInclude Include="car.h" />
     <ClInclude Include="obstacle.h" />
     <ClInclude Include="player.h" />
