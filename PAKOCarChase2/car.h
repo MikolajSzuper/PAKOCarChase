@@ -11,6 +11,7 @@ protected:
     sf::Sprite model;
     sf::Vector2u border;
     sf::Vector2f sensor_pos;
+    float x, y;
     float speed = 0, angle = 0;
     float maxSpeed = 6.0;
     float acc = 0.2, dec = 0.3;
@@ -23,4 +24,5 @@ public:
     sf::Sprite& getPlayer();
     void Stop();
     bool Contact(sf::Sprite& obj);
+    void moving();
 };

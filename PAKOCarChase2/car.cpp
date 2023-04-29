@@ -38,3 +38,30 @@ bool Car::Contact(sf::Sprite& obj) {
     if (sensor.getGlobalBounds().intersects(bump)) return 1;
     return 0;
 }
+
+void Car::moving() {
+    if (speed < maxSpeed)
+        if (speed < 0) speed += dec;
+        else speed += acc;
+
+
+    if (Right && speed != 0) angle += turnSpeed * speed / maxSpeed;
+    if (Left && speed != 0) angle -= turnSpeed * speed / maxSpeed;
+
+    if (stop && x + sin(angle) * speed > 0 && x + sin(angle) * speed < ((float)border.x + 550)) {
+        x += sin(angle) * speed;
+    }
+    if (stop && y - cos(angle) * speed > 0 && y - cos(angle) * speed < ((float)border.y + 550)) {
+        y -= cos(angle) * speed;
+    }
+    model.setRotation(angle * 180 / 3.141592);
+    //Sensor
+    const double rad = 3.14 / 180.0;
+    float circleX = model.getPosition().x + 50 * sin(model.getRotation() * rad);
+    float circleY = model.getPosition().y - 50 * cos(model.getRotation() * rad);
+    sf::Vector2f circlePosition(circleX, circleY);
+    sensor.setPosition(circlePosition);
+    Right = 0;
+    Left = 0;
+    Down = 1;
+}

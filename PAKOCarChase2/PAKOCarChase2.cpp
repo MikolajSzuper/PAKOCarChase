@@ -75,7 +75,6 @@ int main()
 
         app.draw(player.getPlayer());
         app.draw(player1.getPlayer());
-        //app.draw(player.getSensor());
         app.display();
     }
 
