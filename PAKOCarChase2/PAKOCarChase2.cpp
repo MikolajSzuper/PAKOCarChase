@@ -84,6 +84,8 @@ void NewGame() {
         j++;
     }
 
+    sf::Clock clock;
+    int s=0, m=0;
 
     while (app.isOpen())
     {
@@ -101,9 +103,6 @@ void NewGame() {
 
         Obstacle* wsk_obs = *&obs;
 
-        player.update(map.getMap(), wsk_obs);
-
-        player1.update(map.getMap(), wsk_obs, player.getPosToPolice());
 
         for (int i = 0; i < 10; i++)
         {
@@ -112,6 +111,35 @@ void NewGame() {
 
         player1.whenPlayerMove(map.getPos());
 
+
+        sf::Time elapsed = clock.getElapsedTime();
+        if (elapsed.asSeconds() >= 1.f)
+        {
+            player1.onAi(player.getPosToPolice());
+            // Inkrementacja licznika
+            s++;
+            // Zerowanie czasu licznika
+            clock.restart();
+        }
+        std::string win_status;
+        if (s>59)
+        {
+            s = 0;
+            m++;
+        }
+        win_status = std::to_string(m) + ":" + std::to_string(s);
+
+        sf::Font font;
+        font.loadFromFile("assets/ROMAN SHINE.ttf");
+        sf::Text text;
+        text.setFont(font);
+        text.setCharacterSize(24);
+        text.setPosition(10.0f, 10.0f);
+        text.setString("Time: " + win_status);
+
+        player.update(map.getMap(), wsk_obs);
+
+        player1.update(map.getMap(), wsk_obs);
 
         //Draw//
         app.clear(Color::White);
@@ -127,6 +155,7 @@ void NewGame() {
         app.draw(player.getPlayer());
         app.draw(player1.getPlayer());
         //app.draw(player.getSensor());
+        app.draw(text);
         app.display();
     }
 }

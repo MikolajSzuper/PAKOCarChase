@@ -12,6 +12,7 @@ Player::Player(std::string _tex, sf::Vector2f pos, sf::Vector2u _border) : Car(_
 
 void Player::update(sf::Sprite& map, Obstacle*& obs) {
     moving(map, obs);
+    model.setRotation(angle * 180 / 3.141592);
     if (x > 320 && x < 1475) offsetX = x - 320;
     if (y > 240 && y < 1550) offsetY = y - 240;
 }

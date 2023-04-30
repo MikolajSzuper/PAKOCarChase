@@ -61,7 +61,7 @@ void Car::moving(sf::Sprite& map, Obstacle*& obs) {
         x += sin(angle) * speed;
         y -= cos(angle) * speed;
     }
-    model.setRotation(angle * 180 / 3.141592);
+    //model.setRotation(angle * 180 / 3.141592);
     //Sensor
     const double rad = 3.14 / 180.0;
     float circleX = model.getPosition().x + 40 * sin(model.getRotation() * rad);

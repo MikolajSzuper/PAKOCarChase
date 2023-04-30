@@ -12,7 +12,7 @@ Button::Button(sf::RenderWindow& window, std::string txt, sf::Vector2f pos)
 	shape.setScale(0.2,0.4);
 	shape.setOrigin(688 / 2, 61 / 2);
 	shape.setPosition(pos);
-	text.setPosition(shape.getPosition().x,shape.getPosition().y - 10);
+	text.setPosition(shape.getPosition().x + 5,shape.getPosition().y - 10);
 	text.setCharacterSize(24);
 	text.setFillColor(sf::Color(90,255,130));
 	shape.setColor(sf::Color(255,70,70));
