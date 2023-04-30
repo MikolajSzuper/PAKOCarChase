@@ -6,6 +6,8 @@ Ai::Ai(std::string _tex, sf::Vector2u _border) : Car(_tex, _border)
 	model.setPosition(pos);
     sensor_pos = sf::Vector2f(pos.x, pos.y - 60);
     sensor.setPosition(sensor_pos);
+    pos.x = rand() % 1500;
+    pos.y = rand() % 1500;
     x = pos.x;
     y = pos.y;
 }

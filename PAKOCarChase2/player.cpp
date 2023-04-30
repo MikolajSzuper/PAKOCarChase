@@ -25,3 +25,10 @@ sf::Vector2f Player::getPos() {
 sf::Vector2f Player::getPosToPolice() {
     return model.getPosition();
 }
+
+bool Player::Collison(Ai other) {
+    if (model.getGlobalBounds().intersects(other.getPlayer().getGlobalBounds())) {
+        return 1;
+    }
+    return 0;
+}
