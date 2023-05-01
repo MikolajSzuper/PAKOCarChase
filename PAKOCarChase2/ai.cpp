@@ -18,10 +18,10 @@ void Ai::whenPlayerMove(sf::Vector2f _pos) {
 
 
 void Ai::update(sf::Sprite& map, Obstacle*& obs) {    
-    if (!sensor.getGlobalBounds().intersects(map.getGlobalBounds()))
+    /*if (!sensor.getGlobalBounds().intersects(map.getGlobalBounds()))
     {
         Right = 1;
-    }
+    }*/
     moving(map, obs);
     pos.x = x;
     pos.y = y;
@@ -32,14 +32,13 @@ void Ai::onAi(sf::Vector2f player_pos) {
     float dy = player_pos.y - model.getPosition().y;
 
     float distance = sqrt(dx * dx + dy * dy);
-
     //std::cout << distance << std::endl;
 
     if (distance > 200)
     {
         float rotation = atan2(dy, dx) * 180 / 3.141592; // konwersja radianów na stopnie
 
-        if ((int)(angle * 180 / 3.141592) != (int)rotation)
+        if ((int)(angle * 180 / 3.141592) != (int)rotation && stop)
         {
             angle = rotation;
             if (angle > 360)
@@ -50,8 +49,15 @@ void Ai::onAi(sf::Vector2f player_pos) {
                 angle += 360;
             }
             //std::cout << (int)angle << std::endl;
-            model.setRotation(angle * 180 / 3.141592);
         }
+        if (!stop)
+        {
+            angle += 30;
+            x -= 20;
+            y -= 20;
+            stop = 1;
+        }
+        model.setRotation(angle * 180 / 3.141592);
     }
     else {
         stop = 0;

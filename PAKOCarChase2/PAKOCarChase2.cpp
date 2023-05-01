@@ -1,5 +1,7 @@
 ﻿#include <SFML/Graphics.hpp>
 #include <iostream>
+#include <iomanip>
+#include <sstream>
 #include "car.h"
 #include "player.h"
 #include "board.h"
@@ -10,7 +12,7 @@
 using namespace sf;
 
 RenderWindow app(VideoMode(640, 480), "Pako Car Game");
-void GameOver(int m, int s);
+void GameOver(std::string record);
 void NewGame();
 
 int main()
@@ -24,6 +26,10 @@ int main()
     logo.setOrigin(193,96.5);
     logo.setPosition(sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)-125));
     logo.scale(0.6,0.6);
+
+    sf::Image icon;
+    icon.loadFromFile("assets/icon.png");
+    app.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
     Button buttonPlay(app, "Play", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)));
     Button buttonWhoBest(app, "Records", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)+50));
@@ -68,12 +74,9 @@ void NewGame() {
     Player player("assets/car.png", Vector2f(app.getSize().x / 2, app.getSize().y / 2), map.getBorder());
     srand(time(NULL));
     const int obs_how_many = 10;
-    const int bots_how_many = 6;
+    const int bots_how_many = 3;
     Obstacle obs[obs_how_many];
     Ai bots[bots_how_many] = {
-        Ai("assets/police.png", map.getBorder()),
-        Ai("assets/police.png", map.getBorder()),
-        Ai("assets/police.png", map.getBorder()),
         Ai("assets/police.png", map.getBorder()),
         Ai("assets/police.png", map.getBorder()),
         Ai("assets/police.png", map.getBorder()),
@@ -96,7 +99,7 @@ void NewGame() {
 
     sf::Clock clock;
     int s=0, m=0;
-    int game = 1;
+    int lose = 0;
         while (app.isOpen())
         {
             Event e;
@@ -108,8 +111,6 @@ void NewGame() {
             }
 
 
-            while (game)
-            {
             if (Keyboard::isKeyPressed(Keyboard::Right)) player.move("RIGHT");
             if (Keyboard::isKeyPressed(Keyboard::Left)) player.move("LEFT");
             if (Keyboard::isKeyPressed(Keyboard::Space)) player.Stop();
@@ -124,32 +125,39 @@ void NewGame() {
             for (int i = 0; i < bots_how_many; i++)
             {
                 if (player.Collison(bots[i])) {
-                    game = 0;
+                    lose = 1;
                 }
                 bots[i].whenPlayerMove(map.getPos());
                 bots[i].update(map.getMap(), wsk_obs);
+                //bots[i].onAi(player.getPosToPolice());
             }
 
 
             sf::Time elapsed = clock.getElapsedTime();
-            if (elapsed.asSeconds() >= 1.f)
-            {
+            if(elapsed.asSeconds() >= 0.5f) {
                 for (int i = 0; i < bots_how_many; i++)
                 {
                     bots[i].onAi(player.getPosToPolice());
                 }
-                // Inkrementacja licznika
+            }
+            if (elapsed.asSeconds() >= 1.f)
+            {
+                /*for (int i = 0; i < bots_how_many; i++)
+                {
+                    bots[i].onAi(player.getPosToPolice());
+                }*/
                 s++;
-                // Zerowanie czasu licznika
                 clock.restart();
             }
-            std::string win_status;
+            //std::string win_status;
+            std::stringstream win_status;
             if (s > 59)
             {
                 s = 0;
                 m++;
             }
-            win_status = std::to_string(m) + ":" + std::to_string(s);
+            win_status << std::setfill('0') << std::setw(2) << m << ":" << std::setw(2) << s;
+            //win_status = std::to_string(m) + ":" + std::to_string(s);
 
             sf::Font font;
             font.loadFromFile("assets/ROMAN SHINE.ttf");
@@ -157,7 +165,7 @@ void NewGame() {
             text.setFont(font);
             text.setCharacterSize(24);
             text.setPosition(10.0f, 10.0f);
-            text.setString("Time: " + win_status);
+            text.setString("Time: " + win_status.str());
 
             player.update(map.getMap(), wsk_obs);
 
@@ -181,13 +189,14 @@ void NewGame() {
             //app.draw(player.getSensor());
             app.draw(text);
             app.display();
-        }
-            GameOver(m,s);
-            break;
+            if (lose) {
+                GameOver(win_status.str());
+                NewGame();
+            }
     }
 }
 
-void GameOver(int m,int s) {
+void GameOver(std::string record) {
 
     sf::Font font;
     font.loadFromFile("assets/ROMAN SHINE.ttf");
@@ -203,9 +212,10 @@ void GameOver(int m,int s) {
     score.setCharacterSize(24);
     score.setOrigin(score.getGlobalBounds().width / 2, score.getCharacterSize() / 2);
     score.setPosition(app.getSize().x / 2 - 90, app.getSize().y / 2 - 100);
-    score.setString("Your time: "+std::to_string(m)+":"+std::to_string(s));
+    score.setString("Your time: "+ record);
 
-    Button buttonEnd(app, "Exit", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)+10));
+    Button buttonEnd(app, "Exit", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)+50));
+    Button buttonTryAgain(app, "Try Again", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2) + 10));
 
     while (app.isOpen())
     {
@@ -219,12 +229,17 @@ void GameOver(int m,int s) {
 
         app.clear(sf::Color(80, 80, 80));
         buttonEnd.update(app);
+        buttonTryAgain.update(app);
         app.draw(score);
         app.draw(text);
         app.display();
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             if (buttonEnd.isHover()) {
                 app.close();
+            }
+            else if (buttonTryAgain.isHover())
+            {
+                return;
             }
         }
     }
