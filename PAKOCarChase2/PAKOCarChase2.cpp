@@ -36,6 +36,12 @@ int main()
     Button buttonPlay(app, "Play", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)));
     Button buttonWhoBest(app, "Records", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)+50));
     Button buttonExit(app, "Exit", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2) + 100));
+
+    Texts scoreboard_text("Scoreboard", sf::Vector2f(10,200),32);
+    Texts scoreboard_text1("1. ...", sf::Vector2f(10, 230));
+    Texts scoreboard_text2("2. ...", sf::Vector2f(10, 260));
+    Texts scoreboard_text3("3. ...", sf::Vector2f(10, 290));
+
     while (app.isOpen())
     {
         Event e;
@@ -50,26 +56,40 @@ int main()
         buttonPlay.update(app);
         buttonWhoBest.update(app);
         buttonExit.update(app);
+        if (scoreboard)
+        {
+            scoreboard_text.update(app);
+            scoreboard_text1.update(app);
+            scoreboard_text2.update(app);
+            scoreboard_text3.update(app);
+        }
         app.draw(logo);
         app.display();
-
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            if (buttonPlay.isHover()) {
-                NewGame();
-            }
-            else if (buttonWhoBest.isHover())
+        if (e.type == sf::Event::Resized)
+        {
+            app.setSize(sf::Vector2u(640,480));
+        }
+        if (e.type == sf::Event::MouseButtonReleased)
+        {
+            if (e.mouseButton.button == sf::Mouse::Left)
             {
-                if (scoreboard)
+                if (buttonPlay.isHover()) {
+                    NewGame();
+                }
+                else if (buttonWhoBest.isHover())
                 {
-
+                    if (scoreboard)
+                    {
+                        scoreboard = 0;
+                    }
+                    else {
+                        scoreboard = 1;
+                    }
                 }
-                else {
-
+                else if (buttonExit.isHover())
+                {
+                    return EXIT_SUCCESS;
                 }
-            }
-            else if(buttonExit.isHover())
-            {
-                return EXIT_SUCCESS;
             }
         }
 
@@ -238,13 +258,17 @@ void GameOver(std::string record) {
         score.update(app);
         text.update(app);
         app.display();
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            if (buttonEnd.isHover()) {
-                app.close();
-            }
-            else if (buttonTryAgain.isHover())
+        if (e.type == sf::Event::MouseButtonReleased)
+        {
+            if (e.mouseButton.button == sf::Mouse::Left)
             {
-                return;
+                if (buttonEnd.isHover()) {
+                    app.close();
+                }
+                else if (buttonTryAgain.isHover())
+                {
+                    return;
+                }
             }
         }
     }
