@@ -32,3 +32,15 @@ bool Player::Collison(Ai other) {
     }
     return 0;
 }
+
+void Player::restart() {
+    sf::Vector2f pos(320,240);
+    model.setPosition(pos);
+    //sensor.setRadius(10);
+    sensor_pos = sf::Vector2f(pos.x, pos.y - 60);
+    sensor.setPosition(sensor_pos);
+    offsetX = 0;
+    offsetY = 0;
+    x = 320;
+    y = 240;
+}

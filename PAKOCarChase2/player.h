@@ -12,5 +12,6 @@ public:
 	sf::Vector2f getPos();
 	sf::Vector2f getPosToPolice();
 	bool Collison(Ai other);
+	void restart();
 };
 

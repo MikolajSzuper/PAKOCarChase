@@ -11,5 +11,6 @@ public:
 	void getPos();
 	void update(sf::Sprite& map, Obstacle*& obs);
 	void onAi(sf::Vector2f player_pos);
+	void restart();
 };
 

@@ -3,13 +3,13 @@
 
 Ai::Ai(std::string _tex, sf::Vector2u _border) : Car(_tex, _border)
 {
-	model.setPosition(pos);
-    sensor_pos = sf::Vector2f(pos.x, pos.y - 60);
-    sensor.setPosition(sensor_pos);
     pos.x = rand() % 1500;
     pos.y = rand() % 1500;
     x = pos.x;
     y = pos.y;
+    model.setPosition(pos);
+    sensor_pos = sf::Vector2f(pos.x, pos.y - 60);
+    sensor.setPosition(sensor_pos);
 }
 
 void Ai::whenPlayerMove(sf::Vector2f _pos) {
@@ -62,4 +62,14 @@ void Ai::onAi(sf::Vector2f player_pos) {
     else {
         stop = 0;
     }
+}
+
+void Ai::restart() {
+    pos.x = rand() % 1500;
+    pos.y = rand() % 1500;
+    x = pos.x;
+    y = pos.y;
+    model.setPosition(pos);
+    sensor_pos = sf::Vector2f(pos.x, pos.y - 60);
+    sensor.setPosition(sensor_pos);
 }

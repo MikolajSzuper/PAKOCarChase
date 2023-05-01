@@ -8,6 +8,7 @@
 #include "obstacle.h"
 #include "ai.h"
 #include "button.h"
+#include "text.h"
 
 using namespace sf;
 
@@ -19,6 +20,7 @@ int main()
 {    
     app.setFramerateLimit(60);
 
+    bool scoreboard = 0;
     sf::Sprite logo;
     sf::Texture tex_logo;
     tex_logo.loadFromFile("assets/logo.png");
@@ -57,7 +59,13 @@ int main()
             }
             else if (buttonWhoBest.isHover())
             {
-                std::cout << "Records!" << std::endl;
+                if (scoreboard)
+                {
+
+                }
+                else {
+
+                }
             }
             else if(buttonExit.isHover())
             {
@@ -70,18 +78,20 @@ int main()
 }
 
 void NewGame() {
+    srand(time(NULL));
     Board map("assets/grass.png");
     Player player("assets/car.png", Vector2f(app.getSize().x / 2, app.getSize().y / 2), map.getBorder());
-    srand(time(NULL));
     const int obs_how_many = 10;
-    const int bots_how_many = 3;
+    const int bots_how_many = 2;
     Obstacle obs[obs_how_many];
     Ai bots[bots_how_many] = {
         Ai("assets/police.png", map.getBorder()),
         Ai("assets/police.png", map.getBorder()),
-        Ai("assets/police.png", map.getBorder()),
     };
-    int j = 0;
+    sf::Clock clock;
+    int s = 0, m = 0;
+    int lose = 0;
+    /*int j = 0;
     while (j < obs_how_many)
     {
         int k = 1 + j;
@@ -95,11 +105,8 @@ void NewGame() {
             }
         }
         j++;
-    }
+    }*/
 
-    sf::Clock clock;
-    int s=0, m=0;
-    int lose = 0;
         while (app.isOpen())
         {
             Event e;
@@ -111,9 +118,9 @@ void NewGame() {
             }
 
 
-            if (Keyboard::isKeyPressed(Keyboard::Right)) player.move("RIGHT");
-            if (Keyboard::isKeyPressed(Keyboard::Left)) player.move("LEFT");
-            if (Keyboard::isKeyPressed(Keyboard::Space)) player.Stop();
+            if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) player.move("RIGHT");
+            if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A)) player.move("LEFT");
+            //if (Keyboard::isKeyPressed(Keyboard::Space) || Keyboard::isKeyPressed(Keyboard::)) player.Stop();
 
             Obstacle* wsk_obs = *&obs;
 
@@ -191,28 +198,26 @@ void NewGame() {
             app.display();
             if (lose) {
                 GameOver(win_status.str());
-                NewGame();
+                player.restart();
+                map.whenPlayerMove(player.getPos());
+                lose = 0;
+                m = 0;
+                s = 0;
+                for (int i = 0; i < bots_how_many; i++)
+                {
+                    bots[i].restart();
+                }
+                for (int i = 0; i < obs_how_many; i++)
+                {
+                    obs[i].regenarateObstacle();
+                }
             }
     }
 }
 
 void GameOver(std::string record) {
-
-    sf::Font font;
-    font.loadFromFile("assets/ROMAN SHINE.ttf");
-    sf::Text text;
-    text.setFont(font);
-    text.setCharacterSize(32);
-    text.setOrigin(text.getGlobalBounds().width / 2, text.getCharacterSize() / 2);
-    text.setPosition(app.getSize().x / 2 - 90, app.getSize().y / 2 - 200);
-    text.setString("Game Over");
-
-    sf::Text score;
-    score.setFont(font);
-    score.setCharacterSize(24);
-    score.setOrigin(score.getGlobalBounds().width / 2, score.getCharacterSize() / 2);
-    score.setPosition(app.getSize().x / 2 - 90, app.getSize().y / 2 - 100);
-    score.setString("Your time: "+ record);
+    Texts text("Game Over",sf::Vector2f(app.getSize().x / 2 - 90, app.getSize().y / 2 - 200),32);
+    Texts score("Your time: " + record,sf::Vector2f(app.getSize().x / 2 - 90, app.getSize().y / 2 - 100));
 
     Button buttonEnd(app, "Exit", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)+50));
     Button buttonTryAgain(app, "Try Again", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2) + 10));
@@ -230,8 +235,8 @@ void GameOver(std::string record) {
         app.clear(sf::Color(80, 80, 80));
         buttonEnd.update(app);
         buttonTryAgain.update(app);
-        app.draw(score);
-        app.draw(text);
+        score.update(app);
+        text.update(app);
         app.display();
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             if (buttonEnd.isHover()) {
