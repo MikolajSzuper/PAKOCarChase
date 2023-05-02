@@ -10,19 +10,23 @@ Player::Player(std::string _tex,sf::Vector2f pos, sf::Vector2u _border) : Car(_t
     y = 240;
 }
 
-void Player::update(sf::Sprite& map, Obstacle*& obs) {
+void Player::update(sf::Sprite& map, Obstacle*& obs, sf::View& view) {
     moving(map, obs);
     model.setRotation(angle * 180 / 3.141592);
-    if (x > 320 && x < 1475) offsetX = x - 320;
-    if (y > 240 && y < 1550) offsetY = y - 240;
+    float pos_x = view.getCenter().x;
+    float pos_y = view.getCenter().y;
+    if (model.getPosition().x > 340 && model.getPosition().x < 1475)
+    {
+        pos_x = model.getPosition().x;
+    }
+    if (model.getPosition().y > 240 && model.getPosition().y < 1550) {
+        pos_y = model.getPosition().y;
+    }
+    view.setCenter(sf::Vector2f(pos_x,pos_y));
+    model.setPosition(x, y);
 }
 
 sf::Vector2f Player::getPos() {
-    model.setPosition(x - offsetX, y - offsetY);
-    return sf::Vector2f(-offsetX, -offsetY);
-}
-
-sf::Vector2f Player::getPosToPolice() {
     return model.getPosition();
 }
 
@@ -39,8 +43,6 @@ void Player::restart() {
     //sensor.setRadius(10);
     sensor_pos = sf::Vector2f(pos.x, pos.y - 60);
     sensor.setPosition(sensor_pos);
-    offsetX = 0;
-    offsetY = 0;
     x = 320;
     y = 240;
 }

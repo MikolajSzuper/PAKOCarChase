@@ -14,11 +14,6 @@ sf::Sprite& Obstacle::getObstacle() {
 	return model;
 }
 
-void Obstacle::whenPlayerMove(sf::Vector2f _pos) {
-	model.setPosition(_pos + pos);
-	//std::cout << pos.x <<" "<<pos.y << std::endl;
-}
-
 void Obstacle::regenarateObstacle()
 {
 	pos.x = rand() % 1500;

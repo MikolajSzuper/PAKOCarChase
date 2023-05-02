@@ -108,6 +108,7 @@ void NewGame() {
         Ai("assets/police.png", map.getBorder()),
         Ai("assets/police.png", map.getBorder()),
     };
+    Texts time("Time: ", sf::Vector2f(10.0f, 20.0f));
     sf::Clock clock;
     int s = 0, m = 0;
     int lose = 0;
@@ -127,6 +128,15 @@ void NewGame() {
         j++;
     }*/
 
+    for (int i = 0; i < obs_how_many; i++)
+    {
+        if (obs[i].getObstacle().getGlobalBounds().intersects(player.getPlayer().getGlobalBounds())) {
+            obs[i].regenarateObstacle();
+        }
+    }
+
+    sf::View gameView(sf::Vector2f(app.getSize().x/2, app.getSize().y/2), sf::Vector2f(app.getSize().x, app.getSize().y));
+
         while (app.isOpen())
         {
             Event e;
@@ -140,43 +150,22 @@ void NewGame() {
 
             if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) player.move("RIGHT");
             if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A)) player.move("LEFT");
-            //if (Keyboard::isKeyPressed(Keyboard::Space) || Keyboard::isKeyPressed(Keyboard::)) player.Stop();
 
             Obstacle* wsk_obs = *&obs;
-
-
-            for (int i = 0; i < obs_how_many; i++)
-            {
-                obs[i].whenPlayerMove(map.getPos());
-            }
-            for (int i = 0; i < bots_how_many; i++)
-            {
-                if (player.Collison(bots[i])) {
-                    lose = 1;
-                }
-                bots[i].whenPlayerMove(map.getPos());
-                bots[i].update(map.getMap(), wsk_obs);
-                //bots[i].onAi(player.getPosToPolice());
-            }
-
 
             sf::Time elapsed = clock.getElapsedTime();
             if(elapsed.asSeconds() >= 0.5f) {
                 for (int i = 0; i < bots_how_many; i++)
                 {
-                    bots[i].onAi(player.getPosToPolice());
+                    bots[i].onAi(player.getPos());
                 }
             }
             if (elapsed.asSeconds() >= 1.f)
             {
-                /*for (int i = 0; i < bots_how_many; i++)
-                {
-                    bots[i].onAi(player.getPosToPolice());
-                }*/
                 s++;
                 clock.restart();
             }
-            //std::string win_status;
+
             std::stringstream win_status;
             if (s > 59)
             {
@@ -184,22 +173,13 @@ void NewGame() {
                 m++;
             }
             win_status << std::setfill('0') << std::setw(2) << m << ":" << std::setw(2) << s;
-            //win_status = std::to_string(m) + ":" + std::to_string(s);
 
-            sf::Font font;
-            font.loadFromFile("assets/ROMAN SHINE.ttf");
-            sf::Text text;
-            text.setFont(font);
-            text.setCharacterSize(24);
-            text.setPosition(10.0f, 10.0f);
-            text.setString("Time: " + win_status.str());
-
-            player.update(map.getMap(), wsk_obs);
+            player.update(map.getMap(), wsk_obs, gameView);
 
 
             //Draw//
             app.clear(Color::White);
-            map.whenPlayerMove(player.getPos());
+
             app.draw(map.getMap());
 
 
@@ -211,15 +191,25 @@ void NewGame() {
             app.draw(player.getPlayer());
             for (int i = 0; i < bots_how_many; i++)
             {
+                if (player.Collison(bots[i])) {
+                    lose = 1;
+                }
+                bots[i].update(map.getMap(), wsk_obs);
                 app.draw(bots[i].getPlayer());
             }
             //app.draw(player.getSensor());
-            app.draw(text);
+            app.setView(gameView);
+            gameView.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 1.f));
+            time.update(app, "Time: " + win_status.str(), gameView.getCenter() - sf::Vector2f(310,220));
+
             app.display();
+
+
+            //Game restart
             if (lose) {
                 GameOver(win_status.str());
                 player.restart();
-                map.whenPlayerMove(player.getPos());
+                gameView.setCenter(app.getSize().x/2, app.getSize().y / 2);
                 lose = 0;
                 m = 0;
                 s = 0;
@@ -230,6 +220,9 @@ void NewGame() {
                 for (int i = 0; i < obs_how_many; i++)
                 {
                     obs[i].regenarateObstacle();
+                    while (obs[i].getObstacle().getGlobalBounds().intersects(player.getPlayer().getGlobalBounds())) {
+                        obs[i].regenarateObstacle();
+                    }
                 }
             }
     }
@@ -252,6 +245,7 @@ void GameOver(std::string record) {
             }
         }
 
+        app.setView(app.getDefaultView());
         app.clear(sf::Color(80, 80, 80));
         buttonEnd.update(app);
         buttonTryAgain.update(app);

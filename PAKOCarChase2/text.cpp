@@ -23,3 +23,10 @@ void Texts::update(sf::RenderWindow& window)
 {
 	window.draw(text);
 }
+
+void Texts::update(sf::RenderWindow& window, std::string txt, sf::Vector2f pos)
+{
+    text.setString(txt);
+    text.setPosition(pos);
+    window.draw(text);
+}

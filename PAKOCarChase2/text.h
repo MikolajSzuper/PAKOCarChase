@@ -10,5 +10,6 @@ public:
     Texts(std::string txt,sf::Vector2f pos);
     Texts(std::string txt, sf::Vector2f pos, int size);
     void update(sf::RenderWindow& window);
+    void update(sf::RenderWindow& window, std::string txt, sf::Vector2f pos);
 };
 

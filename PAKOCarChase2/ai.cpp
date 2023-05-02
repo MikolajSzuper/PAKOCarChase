@@ -12,11 +12,6 @@ Ai::Ai(std::string _tex, sf::Vector2u _border) : Car(_tex, _border)
     sensor.setPosition(sensor_pos);
 }
 
-void Ai::whenPlayerMove(sf::Vector2f _pos) {
-	model.setPosition(_pos + pos);
-}
-
-
 void Ai::update(sf::Sprite& map, Obstacle*& obs) {    
     /*if (!sensor.getGlobalBounds().intersects(map.getGlobalBounds()))
     {
@@ -25,6 +20,7 @@ void Ai::update(sf::Sprite& map, Obstacle*& obs) {
     moving(map, obs);
     pos.x = x;
     pos.y = y;
+    model.setPosition(pos);
 }
 
 void Ai::onAi(sf::Vector2f player_pos) {
