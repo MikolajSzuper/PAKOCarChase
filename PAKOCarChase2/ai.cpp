@@ -13,10 +13,6 @@ Ai::Ai(std::string _tex, sf::Vector2u _border) : Car(_tex, _border)
 }
 
 void Ai::update(sf::Sprite& map, Obstacle*& obs) {    
-    /*if (!sensor.getGlobalBounds().intersects(map.getGlobalBounds()))
-    {
-        Right = 1;
-    }*/
     moving(map, obs);
     pos.x = x;
     pos.y = y;
@@ -30,7 +26,7 @@ void Ai::onAi(sf::Vector2f player_pos) {
     float distance = sqrt(dx * dx + dy * dy);
     //std::cout << distance << std::endl;
 
-    if (distance > 200)
+    if (distance > 150)
     {
         float rotation = atan2(dy, dx) * 180 / 3.141592; // konwersja radianów na stopnie
 

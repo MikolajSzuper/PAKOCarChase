@@ -18,7 +18,8 @@ void NewGame();
 
 int main()
 {    
-    app.setVerticalSyncEnabled(true);
+    app.setFramerateLimit(60);
+    //app.setVerticalSyncEnabled(true);
 
     bool scoreboard = 0;
     sf::Sprite logo;
@@ -108,25 +109,11 @@ void NewGame() {
     sf::Clock clock;
     int s = 0, m = 0;
     int lose = 0;
-    /*int j = 0;
-    while (j < obs_how_many)
-    {
-        int k = 1 + j;
-        while (k < obs_how_many)
-        {
-            if (obs[j].getObstacle().getGlobalBounds().intersects(obs[k].getObstacle().getGlobalBounds()) || obs[j].getObstacle().getGlobalBounds().intersects(player.getPlayer().getGlobalBounds())) {
-                obs[j].regenarateObstacle();
-            }
-            else {
-                k++;
-            }
-        }
-        j++;
-    }*/
 
     for (int i = 0; i < obs_how_many; i++)
     {
-        if (obs[i].getObstacle().getGlobalBounds().intersects(player.getPlayer().getGlobalBounds())) {
+        obs[i].regenarateObstacle();
+        while (obs[i].getObstacle().getGlobalBounds().intersects(player.getPlayer().getGlobalBounds())) {
             obs[i].regenarateObstacle();
         }
     }
@@ -143,26 +130,15 @@ void NewGame() {
                 }
             }
 
-            if (e.type == Event::KeyPressed)
-            {
-                    if (e.key.code == Keyboard::Right)
-                    {
-                        player.move("RIGHT");
-                    }
-                    else if (e.key.code == Keyboard::Left)
-                    {
-                        player.move("LEFT");
-                    }
-            }
             if (e.type == Event::KeyReleased)
             {
-                if (e.key.code == Keyboard::Right || e.key.code == Keyboard::Left)
+                if (e.key.code == Keyboard::Right || e.key.code == Keyboard::Left || e.key.code == Keyboard::A || e.key.code == Keyboard::D)
                 {
                    player. move();
                 }
             }
-            /*if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) player.move("RIGHT");
-            if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A)) player.move("LEFT");*/
+            if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) player.move("RIGHT");
+            if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A)) player.move("LEFT");
 
             Obstacle* wsk_obs = *&obs;
 
