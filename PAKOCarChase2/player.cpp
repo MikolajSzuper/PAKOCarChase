@@ -1,5 +1,7 @@
 #include "player.h"
 
+std::map<std::string, int> Dir{ {"RIGHT", 0}, {"LEFT", 1} };
+
 Player::Player(std::string _tex,sf::Vector2f pos, sf::Vector2u _border) : Car(_tex, _border)
 {
 	model.setPosition(pos);
@@ -8,9 +10,11 @@ Player::Player(std::string _tex,sf::Vector2f pos, sf::Vector2u _border) : Car(_t
     sensor.setPosition(sensor_pos);
     x = 320;
     y = 240;
+    turnSpeed = 0.07;
 }
 
 void Player::update(sf::Sprite& map, Obstacle*& obs, sf::View& view) {
+    mps = map.getGlobalBounds();
     moving(map, obs);
     model.setRotation(angle * 180 / 3.141592);
     float pos_x = view.getCenter().x;
@@ -45,4 +49,26 @@ void Player::restart() {
     sensor.setPosition(sensor_pos);
     x = 320;
     y = 240;
+    move();
+}
+
+void Player::move(std::string dir) {
+    stop = 0;
+    switch (Dir[dir])
+    {
+    case 0:
+        Right = 1;
+        break;
+    case 1:
+        Left = 1;
+        break;
+    }
+    if (sensor.getGlobalBounds().intersects(mps) && !contact && model.getGlobalBounds().intersects(mps))
+    {
+        x += sin(prev_angle) * 3;
+        y -= cos(prev_angle) * 3;
+    }
+}
+void Player::move() {
+    stop = 1;
 }

@@ -12,13 +12,13 @@
 
 using namespace sf;
 
-RenderWindow app(VideoMode(640, 480), "Pako Car Game");
+RenderWindow app(VideoMode(640, 480), "Pako Car Game",sf::Style::Close);
 void GameOver(std::string record);
 void NewGame();
 
 int main()
 {    
-    app.setFramerateLimit(60);
+    app.setVerticalSyncEnabled(true);
 
     bool scoreboard = 0;
     sf::Sprite logo;
@@ -65,10 +65,6 @@ int main()
         }
         app.draw(logo);
         app.display();
-        if (e.type == sf::Event::Resized)
-        {
-            app.setSize(sf::Vector2u(640,480));
-        }
         if (e.type == sf::Event::MouseButtonReleased)
         {
             if (e.mouseButton.button == sf::Mouse::Left)
@@ -147,13 +143,32 @@ void NewGame() {
                 }
             }
 
-
-            if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) player.move("RIGHT");
-            if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A)) player.move("LEFT");
+            if (e.type == Event::KeyPressed)
+            {
+                    if (e.key.code == Keyboard::Right)
+                    {
+                        player.move("RIGHT");
+                    }
+                    else if (e.key.code == Keyboard::Left)
+                    {
+                        player.move("LEFT");
+                    }
+            }
+            if (e.type == Event::KeyReleased)
+            {
+                if (e.key.code == Keyboard::Right || e.key.code == Keyboard::Left)
+                {
+                   player. move();
+                }
+            }
+            /*if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) player.move("RIGHT");
+            if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A)) player.move("LEFT");*/
 
             Obstacle* wsk_obs = *&obs;
 
+            // Timer and time draw update and bots Ai
             sf::Time elapsed = clock.getElapsedTime();
+            //Bots Ai
             if(elapsed.asSeconds() >= 0.5f) {
                 for (int i = 0; i < bots_how_many; i++)
                 {
@@ -165,7 +180,6 @@ void NewGame() {
                 s++;
                 clock.restart();
             }
-
             std::stringstream win_status;
             if (s > 59)
             {
@@ -174,10 +188,12 @@ void NewGame() {
             }
             win_status << std::setfill('0') << std::setw(2) << m << ":" << std::setw(2) << s;
 
+
+            //Update player
             player.update(map.getMap(), wsk_obs, gameView);
 
 
-            //Draw//
+            //Draw and display the main window of application
             app.clear(Color::White);
 
             app.draw(map.getMap());
@@ -189,6 +205,7 @@ void NewGame() {
             }
 
             app.draw(player.getPlayer());
+            //Draw bots and update them
             for (int i = 0; i < bots_how_many; i++)
             {
                 if (player.Collison(bots[i])) {
@@ -200,13 +217,12 @@ void NewGame() {
             //app.draw(player.getSensor());
             app.setView(gameView);
             gameView.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 1.f));
-            time.update(app, "Time: " + win_status.str(), gameView.getCenter() - sf::Vector2f(310,220));
-
+            time.update(app, "Time: " + win_status.str(), gameView.getCenter() - sf::Vector2f((app.getSize().x/2) - 20, (app.getSize().y/2) - 20));
             app.display();
-
 
             //Game restart
             if (lose) {
+                
                 GameOver(win_status.str());
                 player.restart();
                 gameView.setCenter(app.getSize().x/2, app.getSize().y / 2);
