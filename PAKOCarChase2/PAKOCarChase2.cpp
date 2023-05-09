@@ -35,8 +35,8 @@ int main()
     app.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
     Button buttonPlay(app, "Play", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)));
-    Button buttonWhoBest(app, "Records", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)+50));
-    Button buttonExit(app, "Exit", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2) + 100));
+    //Button buttonWhoBest(app, "Records", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)+50));
+    Button buttonExit(app, "Exit", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2) + 50));
 
     Texts scoreboard_text("Scoreboard", sf::Vector2f(10,200),32);
     Texts scoreboard_text1("1. ...", sf::Vector2f(10, 230));
@@ -55,7 +55,7 @@ int main()
 
         app.clear(sf::Color(80, 80, 80));
         buttonPlay.update(app);
-        buttonWhoBest.update(app);
+        //buttonWhoBest.update(app);
         buttonExit.update(app);
         if (scoreboard)
         {
@@ -73,7 +73,7 @@ int main()
                 if (buttonPlay.isHover()) {
                     NewGame();
                 }
-                else if (buttonWhoBest.isHover())
+                /*else if (buttonWhoBest.isHover())
                 {
                     if (scoreboard)
                     {
@@ -82,7 +82,7 @@ int main()
                     else {
                         scoreboard = 1;
                     }
-                }
+                }*/
                 else if (buttonExit.isHover())
                 {
                     return EXIT_SUCCESS;
