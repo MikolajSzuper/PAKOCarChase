@@ -11,7 +11,6 @@ private:
 public:
 	Obstacle();
 	sf::Sprite& getObstacle();
-	void whenPlayerMove(sf::Vector2f _pos);
 	void regenarateObstacle();
 };
 
