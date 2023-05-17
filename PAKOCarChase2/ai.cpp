@@ -1,10 +1,10 @@
 #include "ai.h"
 #include <iostream>
 
-Ai::Ai(std::string _tex, sf::Vector2u _border) : Car(_tex, _border)
+Ai::Ai(std::string _tex, sf::Vector2u _border, sf::Vector2f scale) : Car(_tex, _border, scale)
 {
-    pos.x = rand() % 1500;
-    pos.y = rand() % 1500;
+    pos.x = rand() % 2400*scale.x + 1200;
+    pos.y = rand() % 2400*scale.y + 1200;
     x = pos.x;
     y = pos.y;
     model.setPosition(pos);
@@ -51,14 +51,14 @@ void Ai::onAi(sf::Vector2f player_pos) {
         }
         model.setRotation(angle * 180 / 3.141592);
     }
-    else {
+    /*else {
         stop = 0;
-    }
+    }*/
 }
 
 void Ai::restart() {
-    pos.x = rand() % 1500;
-    pos.y = rand() % 1500;
+    pos.x = rand() % 1500 + 1200;
+    pos.y = rand() % 1500 + 1200;
     x = pos.x;
     y = pos.y;
     model.setPosition(pos);

@@ -12,12 +12,21 @@
 
 using namespace sf;
 
-RenderWindow app(VideoMode(640, 480), "Pako Car Game",sf::Style::Close);
+RenderWindow app(VideoMode(VideoMode::getDesktopMode().width, VideoMode::getDesktopMode().height), "Pako Car Game", sf::Style::Close);
 void GameOver(std::string record);
 void NewGame();
 
+Vector2f scale = { 1,1 };
+
 int main()
 {    
+    app.create(sf::VideoMode::getDesktopMode(), "Pako Car Game", sf::Style::Fullscreen);
+
+    if (sf::VideoMode::getDesktopMode().width > 1920)
+    {
+        scale = { 2,2 };
+    }
+
     app.setFramerateLimit(60);
     //app.setVerticalSyncEnabled(true);
 
@@ -27,16 +36,16 @@ int main()
     tex_logo.loadFromFile("assets/logo.png");
     logo.setTexture(tex_logo);
     logo.setOrigin(193,96.5);
-    logo.setPosition(sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)-125));
-    logo.scale(0.6,0.6);
+    logo.setPosition(sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)-225));
+    logo.scale(1,1);
 
     sf::Image icon;
     icon.loadFromFile("assets/icon.png");
     app.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
     Button buttonPlay(app, "Play", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)));
-    Button buttonWhoBest(app, "Records", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)+50));
-    Button buttonExit(app, "Exit", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2) + 100));
+    //Button buttonWhoBest(app, "Records", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)+50));
+    Button buttonExit(app, "Exit", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2) + 75));
 
     Texts scoreboard_text("Scoreboard", sf::Vector2f(10,200),32);
     Texts scoreboard_text1("1. ...", sf::Vector2f(10, 230));
@@ -55,7 +64,7 @@ int main()
 
         app.clear(sf::Color(80, 80, 80));
         buttonPlay.update(app);
-        buttonWhoBest.update(app);
+        //buttonWhoBest.update(app);
         buttonExit.update(app);
         if (scoreboard)
         {
@@ -73,7 +82,7 @@ int main()
                 if (buttonPlay.isHover()) {
                     NewGame();
                 }
-                else if (buttonWhoBest.isHover())
+                /*else if (buttonWhoBest.isHover())
                 {
                     if (scoreboard)
                     {
@@ -82,7 +91,7 @@ int main()
                     else {
                         scoreboard = 1;
                     }
-                }
+                }*/
                 else if (buttonExit.isHover())
                 {
                     return EXIT_SUCCESS;
@@ -96,22 +105,25 @@ int main()
 
 void NewGame() {
     srand(time(NULL));
-    Board map("assets/grass.png");
-    Player player("assets/car.png", Vector2f(app.getSize().x / 2, app.getSize().y / 2), map.getBorder());
+    Board map("assets/grass.png",scale);
+    Player player("assets/car.png", Vector2f(app.getSize().x / 2, app.getSize().y / 2), map.getBorder(),scale);
     const int obs_how_many = 10;
     const int bots_how_many = 2;
     Obstacle obs[obs_how_many];
     Ai bots[bots_how_many] = {
-        Ai("assets/police.png", map.getBorder()),
-        Ai("assets/police.png", map.getBorder()),
+        Ai("assets/police.png", map.getBorder(),scale),
+        Ai("assets/police.png", map.getBorder(),scale),
     };
     Texts time("Time: ", sf::Vector2f(10.0f, 20.0f));
     sf::Clock clock;
     int s = 0, m = 0;
     int lose = 0;
+    bool Left_click = 0, Right_click = 0;
+
 
     for (int i = 0; i < obs_how_many; i++)
     {
+        obs[i].scaleing(scale);
         obs[i].regenarateObstacle();
         while (obs[i].getObstacle().getGlobalBounds().intersects(player.getPlayer().getGlobalBounds())) {
             obs[i].regenarateObstacle();
@@ -132,13 +144,29 @@ void NewGame() {
 
             if (e.type == Event::KeyReleased)
             {
-                if (e.key.code == Keyboard::Right || e.key.code == Keyboard::Left || e.key.code == Keyboard::A || e.key.code == Keyboard::D)
+                if (e.key.code == Keyboard::Right || e.key.code == Keyboard::D)
                 {
-                   player. move();
+                   Right_click = 0;
+                }
+                else if (e.key.code == Keyboard::Left || e.key.code == Keyboard::A) 
+                {
+                    Left_click = 0;
+                }
+                player.move();
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) {
+                if (!Left_click)
+                {
+                    Right_click = 1;
+                    player.move("RIGHT");
                 }
             }
-            if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) player.move("RIGHT");
-            if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A)) player.move("LEFT");
+            if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A)){
+                if (!Right_click) {
+                    Left_click = 1;
+                    player.move("LEFT");
+                }
+            }
 
             Obstacle* wsk_obs = *&obs;
 
@@ -170,7 +198,7 @@ void NewGame() {
 
 
             //Draw and display the main window of application
-            app.clear(Color::White);
+            app.clear(sf::Color(30,44.7,10.6));
 
             app.draw(map.getMap());
 
@@ -205,6 +233,8 @@ void NewGame() {
                 lose = 0;
                 m = 0;
                 s = 0;
+                Right_click = 0;
+                Left_click = 0;
                 for (int i = 0; i < bots_how_many; i++)
                 {
                     bots[i].restart();
@@ -221,10 +251,10 @@ void NewGame() {
 }
 
 void GameOver(std::string record) {
-    Texts text("Game Over",sf::Vector2f(app.getSize().x / 2 - 90, app.getSize().y / 2 - 200),32);
-    Texts score("Your time: " + record,sf::Vector2f(app.getSize().x / 2 - 90, app.getSize().y / 2 - 100));
+    Texts text("Game Over",sf::Vector2f(app.getSize().x / 2 - 120, app.getSize().y / 2 - 400),48);
+    Texts score("Your time: " + record,sf::Vector2f(app.getSize().x / 2 - 120, app.getSize().y / 2 - 200));
 
-    Button buttonEnd(app, "Exit", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)+50));
+    Button buttonEnd(app, "Exit", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)+85));
     Button buttonTryAgain(app, "Try Again", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2) + 10));
 
     while (app.isOpen())

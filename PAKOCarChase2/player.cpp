@@ -2,7 +2,7 @@
 
 std::map<std::string, int> Dir{ {"RIGHT", 0}, {"LEFT", 1} };
 
-Player::Player(std::string _tex,sf::Vector2f pos, sf::Vector2u _border) : Car(_tex, _border)
+Player::Player(std::string _tex,sf::Vector2f pos, sf::Vector2u _border, sf::Vector2f scale) : Car(_tex, _border, scale)
 {
 	model.setPosition(pos);
     //sensor.setRadius(10);
@@ -17,15 +17,17 @@ void Player::update(sf::Sprite& map, Obstacle*& obs, sf::View& view) {
     mps = map.getGlobalBounds();
     moving(map, obs);
     model.setRotation(angle * 180 / 3.141592);
-    float pos_x = view.getCenter().x;
-    float pos_y = view.getCenter().y;
-    if (model.getPosition().x > 340 && model.getPosition().x < 1475)
+    /*float pos_x = view.getCenter().x;
+    float pos_y = view.getCenter().y;*/
+    /*if (model.getPosition().x > 340 && model.getPosition().x < 1475)
     {
         pos_x = model.getPosition().x;
     }
     if (model.getPosition().y > 240 && model.getPosition().y < 1550) {
         pos_y = model.getPosition().y;
-    }
+    }*/
+    float pos_x = model.getPosition().x;
+    float pos_y = model.getPosition().y;
     view.setCenter(sf::Vector2f(pos_x,pos_y));
     model.setPosition(x, y);
 }
@@ -65,8 +67,8 @@ void Player::move(std::string dir) {
     }
     if (sensor.getGlobalBounds().intersects(mps) && !contact && model.getGlobalBounds().intersects(mps))
     {
-        x += sin(prev_angle) * 3;
-        y -= cos(prev_angle) * 3;
+        x += sin(prev_angle) * 4;
+        y -= cos(prev_angle) * 4;
     }
 }
 void Player::move() {

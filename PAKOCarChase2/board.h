@@ -9,7 +9,7 @@ private:
 	sf::Texture tex;
 	sf::Sprite background;
 public:
-	Board(std::string _tex);
+	Board(std::string _tex, sf::Vector2f scale);
 	sf::Sprite& getMap();
 	sf::Vector2u getBorder();
 	sf::Vector2f getPos();

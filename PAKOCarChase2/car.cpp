@@ -1,12 +1,13 @@
 #include "car.h"
 
-Car::Car(std::string _tex, sf::Vector2u _border) {
+Car::Car(std::string _tex, sf::Vector2u _border, sf::Vector2f scale) {
     tex.loadFromFile(_tex);
     model.setTexture(tex);
-    model.setScale(0.5, 0.5);
+    model.setScale(scale.x*0.5, scale.y*0.5);
+    maxSpeed = maxSpeed+((maxSpeed / 3) * scale.x);
     model.setOrigin(46, 80);//99.5//36
     border = _border;
-
+    _scale = scale;
     sensor.setSize(sf::Vector2f(40, 50));
     sensor.setOrigin(sensor.getSize().x / 2, sensor.getSize().y / 2);
 }
@@ -45,7 +46,7 @@ void Car::moving(sf::Sprite& map, Obstacle*& obs) {
             contact = Contact(obs[i].getObstacle());
         }
         if (contact) { 
-            speed = 2; 
+            speed = 4; 
         }
         else {
             if (!(Right == 0 && Left == 0))
@@ -61,7 +62,7 @@ void Car::moving(sf::Sprite& map, Obstacle*& obs) {
         y -= cos(angle) * speed;
         prev_angle = angle;
     }
-    if (!(sensor.getGlobalBounds().intersects(map.getGlobalBounds()) && model.getGlobalBounds().intersects(map.getGlobalBounds()))){
+    if (!(sensor.getGlobalBounds().intersects(map.getGlobalBounds()))){
         x -= sin(angle) * speed;
         y += cos(angle) * speed;
         prev_angle = angle;
