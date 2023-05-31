@@ -23,7 +23,7 @@ void Player::update(sf::Sprite& map, Obstacle*& obs, sf::View& view) {
     {
         pos_x = model.getPosition().x;
     }
-    if (model.getPosition().y > 640 && model.getPosition().y < 1575) {
+    if (model.getPosition().y > 640*_scale.x && model.getPosition().y < 1575*_scale.x) {
         pos_y = model.getPosition().y;
     }
     //float pos_x = model.getPosition().x;
