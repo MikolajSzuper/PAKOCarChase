@@ -10,7 +10,7 @@ Player::Player(std::string _tex,sf::Vector2f pos, sf::Vector2u _border, sf::Vect
     sensor.setPosition(sensor_pos);
     x = 320;
     y = 240;
-    turnSpeed = 0.07*scale.x;
+    turnSpeed = 0.07;
 }
 
 void Player::update(sf::Sprite& map, Obstacle*& obs, sf::View& view) {

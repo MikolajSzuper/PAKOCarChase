@@ -4,7 +4,7 @@ Car::Car(std::string _tex, sf::Vector2u _border, sf::Vector2f scale) {
     tex.loadFromFile(_tex);
     model.setTexture(tex);
     model.setScale(scale.x*0.5, scale.y*0.5);
-    maxSpeed = maxSpeed+((maxSpeed / 3) * scale.x*scale.x*scale.x);
+    maxSpeed = maxSpeed+((maxSpeed / 3) * scale.x*scale.x);
     model.setOrigin(46, 80);//99.5//36
     border = _border;
     _scale = scale;
