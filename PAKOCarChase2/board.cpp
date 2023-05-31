@@ -1,13 +1,9 @@
 #include "board.h"
 
-Board::Board(std::string _tex) {
+Board::Board(std::string _tex, sf::Vector2f scale) {
 	tex.loadFromFile(_tex);
 	background.setTexture(tex);
-	background.setScale(1.5,1.5);
-}
-
-void Board::whenPlayerMove(sf::Vector2f pos) {
-		background.setPosition(pos);
+	background.setScale(2*scale.x,2*scale.y);
 }
 
 sf::Sprite& Board::getMap() {
@@ -20,8 +16,4 @@ sf::Vector2u Board::getBorder() {
 
 sf::Vector2f Board::getPos() {
 	return background.getPosition();
-}
-
-void Board::addChild() {
-	
 }

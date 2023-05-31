@@ -1,13 +1,18 @@
 #pragma once
 #include "car.h"
+#include "obstacle.h"
+#include "ai.h"
 class Player : public Car
 {
 private:
-	float x = 320, y = 240;
-	float offsetX = 0, offsetY = 0;
+	sf::FloatRect mps;
 public:
-	Player(std::string _tex, sf::Vector2f pos, sf::Vector2u _border);
-	void update();
+	Player(std::string _tex, sf::Vector2f pos, sf::Vector2u _border, sf::Vector2f scale);
+	void update(sf::Sprite& map, Obstacle*& obs, sf::View& view);
 	sf::Vector2f getPos();
+	bool Collison(Ai other);
+	void restart();
+	void move(std::string dir);
+	void move();
 };
 
