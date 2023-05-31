@@ -167,6 +167,9 @@ void NewGame() {
                     player.move("LEFT");
                 }
             }
+            if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+                app.close();
+            }
 
             Obstacle* wsk_obs = *&obs;
 
