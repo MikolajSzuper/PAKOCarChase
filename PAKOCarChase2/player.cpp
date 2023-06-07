@@ -20,11 +20,11 @@ sf::Vector2f Player::update(sf::Sprite& map, Obstacle*& obs, sf::View& view) {
     model.setRotation(angle * 180 / 3.141592);
     float pos_x = view.getCenter().x;
     float pos_y = view.getCenter().y;
-    if (model.getPosition().x > 1024 && model.getPosition().x < 1450)
+    if (model.getPosition().x > 960 && model.getPosition().x < 1445)
     {
         pos_x = model.getPosition().x;
     }
-    if (model.getPosition().y > 640 && model.getPosition().y < 1575) {
+    if (model.getPosition().y > 540 && model.getPosition().y < 1865) {
         pos_y = model.getPosition().y;
     }
     //float pos_x = model.getPosition().x;

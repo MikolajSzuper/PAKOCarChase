@@ -72,9 +72,7 @@ int main()
 }
 
 void NewGame() {
-    HWND handle = app.getSystemHandle(); // Pobieranie uchwytu okna SFML
-
-    // Maksymalizowanie okna
+    HWND handle = app.getSystemHandle(); 
     ShowWindow(handle, SW_MAXIMIZE);
     srand(time(NULL));
     Board map("assets/grass.png");
@@ -206,6 +204,7 @@ void NewGame() {
                 
                 GameOver(win_status.str());
                 ShowWindow(handle, SW_MAXIMIZE);
+                time_pos = { 20,20 };
                 player.restart();
                 gameView.setCenter(app.getSize().x/2, app.getSize().y / 2);
                 lose = 0;
@@ -229,9 +228,7 @@ void NewGame() {
 }
 
 void GameOver(std::string record) {
-    HWND handle = app.getSystemHandle(); // Pobieranie uchwytu okna SFML
-
-    // Maksymalizowanie okna
+    HWND handle = app.getSystemHandle(); 
     ShowWindow(handle, SW_NORMAL);
     app.clear();
     Texts text("Game Over",sf::Vector2f(app.getSize().x / 2 - 120, app.getSize().y / 2 - 400),48);
