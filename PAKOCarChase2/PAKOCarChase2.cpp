@@ -36,7 +36,11 @@ int main()
     app.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
     Button buttonPlay(app, "Play", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)));
+
     Button buttonExit(app, "Exit", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2) + 75));
+
+
+
 
     while (app.isOpen())
     {
@@ -51,6 +55,7 @@ int main()
         app.clear(sf::Color(80, 80, 80));
         buttonPlay.update(app, sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)));
         buttonExit.update(app, sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2) + 75));
+
         app.draw(logo);
         app.display();
         if (e.type == sf::Event::MouseButtonReleased)
