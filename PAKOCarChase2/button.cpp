@@ -9,11 +9,11 @@ Button::Button(sf::RenderWindow& window, std::string txt, sf::Vector2f pos)
 	//shape.setSize(sf::Vector2f(100, 50));
 	tex.loadFromFile("assets/button.png");
 	shape.setTexture(tex);
-	shape.setScale(0.2,0.4);
+	shape.setScale(0.4,0.6);
 	shape.setOrigin(688 / 2, 61 / 2);
 	shape.setPosition(pos);
-	text.setPosition(shape.getPosition().x + 5,shape.getPosition().y - 10);
-	text.setCharacterSize(24);
+	text.setPosition(shape.getPosition().x,shape.getPosition().y - 20);
+	text.setCharacterSize(32);
 	text.setFillColor(sf::Color(90,255,130));
 	shape.setColor(sf::Color(255,70,70));
 	//shape.setFillColor(sf::Color::Yellow);
@@ -21,7 +21,7 @@ Button::Button(sf::RenderWindow& window, std::string txt, sf::Vector2f pos)
 	window.draw(text);
 }
 
-void Button::update(sf::RenderWindow& window)
+void Button::update(sf::RenderWindow& window, sf::Vector2f pos)
 {
 	sf::Mouse mouse;
 	if (shape.getGlobalBounds().contains(static_cast<sf::Vector2f>(mouse.getPosition(window)))) {
@@ -34,7 +34,8 @@ void Button::update(sf::RenderWindow& window)
 		text.setFillColor(sf::Color(90, 255, 130));
 		shape.setColor(sf::Color(255, 70, 70));
 	}
-
+	shape.setPosition(pos);
+	text.setPosition(shape.getPosition().x, shape.getPosition().y - 20);
 	window.draw(shape);
 	window.draw(text);
 }

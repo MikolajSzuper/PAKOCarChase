@@ -6,7 +6,6 @@ Car::Car(std::string _tex, sf::Vector2u _border) {
     model.setScale(0.5, 0.5);
     model.setOrigin(46, 80);//99.5//36
     border = _border;
-
     sensor.setSize(sf::Vector2f(40, 50));
     sensor.setOrigin(sensor.getSize().x / 2, sensor.getSize().y / 2);
 }
@@ -45,7 +44,7 @@ void Car::moving(sf::Sprite& map, Obstacle*& obs) {
             contact = Contact(obs[i].getObstacle());
         }
         if (contact) { 
-            speed = 2; 
+            speed = 4; 
         }
         else {
             if (!(Right == 0 && Left == 0))
@@ -61,7 +60,7 @@ void Car::moving(sf::Sprite& map, Obstacle*& obs) {
         y -= cos(angle) * speed;
         prev_angle = angle;
     }
-    if (!(sensor.getGlobalBounds().intersects(map.getGlobalBounds()) && model.getGlobalBounds().intersects(map.getGlobalBounds()))){
+    if (!(sensor.getGlobalBounds().intersects(map.getGlobalBounds()))){
         x -= sin(angle) * speed;
         y += cos(angle) * speed;
         prev_angle = angle;

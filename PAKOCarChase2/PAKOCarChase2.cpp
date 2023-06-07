@@ -9,39 +9,38 @@
 #include "ai.h"
 #include "button.h"
 #include "text.h"
+#include <Windows.h>
 
 using namespace sf;
 
-RenderWindow app(VideoMode(640, 480), "Pako Car Game",sf::Style::Close);
+RenderWindow app(VideoMode(1920, 1080), "Pako Car Game", sf::Style::Close);
 void GameOver(std::string record);
 void NewGame();
 
 int main()
 {    
+
     app.setFramerateLimit(60);
     //app.setVerticalSyncEnabled(true);
 
-    bool scoreboard = 0;
     sf::Sprite logo;
     sf::Texture tex_logo;
     tex_logo.loadFromFile("assets/logo.png");
     logo.setTexture(tex_logo);
     logo.setOrigin(193,96.5);
-    logo.setPosition(sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)-125));
-    logo.scale(0.6,0.6);
+    logo.setPosition(sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)-225));
+    logo.scale(1,1);
 
     sf::Image icon;
     icon.loadFromFile("assets/icon.png");
     app.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
     Button buttonPlay(app, "Play", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)));
-    //Button buttonWhoBest(app, "Records", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)+50));
-    Button buttonExit(app, "Exit", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2) + 50));
 
-    Texts scoreboard_text("Scoreboard", sf::Vector2f(10,200),32);
-    Texts scoreboard_text1("1. ...", sf::Vector2f(10, 230));
-    Texts scoreboard_text2("2. ...", sf::Vector2f(10, 260));
-    Texts scoreboard_text3("3. ...", sf::Vector2f(10, 290));
+    Button buttonExit(app, "Exit", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2) + 75));
+
+
+
 
     while (app.isOpen())
     {
@@ -54,16 +53,9 @@ int main()
         }
 
         app.clear(sf::Color(80, 80, 80));
-        buttonPlay.update(app);
-        //buttonWhoBest.update(app);
-        buttonExit.update(app);
-        if (scoreboard)
-        {
-            scoreboard_text.update(app);
-            scoreboard_text1.update(app);
-            scoreboard_text2.update(app);
-            scoreboard_text3.update(app);
-        }
+        buttonPlay.update(app, sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)));
+        buttonExit.update(app, sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2) + 75));
+
         app.draw(logo);
         app.display();
         if (e.type == sf::Event::MouseButtonReleased)
@@ -73,16 +65,6 @@ int main()
                 if (buttonPlay.isHover()) {
                     NewGame();
                 }
-                /*else if (buttonWhoBest.isHover())
-                {
-                    if (scoreboard)
-                    {
-                        scoreboard = 0;
-                    }
-                    else {
-                        scoreboard = 1;
-                    }
-                }*/
                 else if (buttonExit.isHover())
                 {
                     return EXIT_SUCCESS;
@@ -95,6 +77,8 @@ int main()
 }
 
 void NewGame() {
+    HWND handle = app.getSystemHandle(); 
+    ShowWindow(handle, SW_MAXIMIZE);
     srand(time(NULL));
     Board map("assets/grass.png");
     Player player("assets/car.png", Vector2f(app.getSize().x / 2, app.getSize().y / 2), map.getBorder());
@@ -105,10 +89,13 @@ void NewGame() {
         Ai("assets/police.png", map.getBorder()),
         Ai("assets/police.png", map.getBorder()),
     };
-    Texts time("Time: ", sf::Vector2f(10.0f, 20.0f));
+    sf::Vector2f time_pos = {20,20};
+    Texts time("Time: ", {20,20});
     sf::Clock clock;
     int s = 0, m = 0;
     int lose = 0;
+    bool Left_click = 0, Right_click = 0;
+
 
     for (int i = 0; i < obs_how_many; i++)
     {
@@ -119,6 +106,7 @@ void NewGame() {
     }
 
     sf::View gameView(sf::Vector2f(app.getSize().x/2, app.getSize().y/2), sf::Vector2f(app.getSize().x, app.getSize().y));
+
 
         while (app.isOpen())
         {
@@ -132,13 +120,32 @@ void NewGame() {
 
             if (e.type == Event::KeyReleased)
             {
-                if (e.key.code == Keyboard::Right || e.key.code == Keyboard::Left || e.key.code == Keyboard::A || e.key.code == Keyboard::D)
+                if (e.key.code == Keyboard::Right || e.key.code == Keyboard::D)
                 {
-                   player. move();
+                   Right_click = 0;
+                }
+                else if (e.key.code == Keyboard::Left || e.key.code == Keyboard::A) 
+                {
+                    Left_click = 0;
+                }
+                player.move();
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) {
+                if (!Left_click)
+                {
+                    Right_click = 1;
+                    player.move("RIGHT");
                 }
             }
-            if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) player.move("RIGHT");
-            if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A)) player.move("LEFT");
+            if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A)){
+                if (!Right_click) {
+                    Left_click = 1;
+                    player.move("LEFT");
+                }
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+                app.close();
+            }
 
             Obstacle* wsk_obs = *&obs;
 
@@ -166,11 +173,11 @@ void NewGame() {
 
 
             //Update player
-            player.update(map.getMap(), wsk_obs, gameView);
+            time_pos = time_pos - player.update(map.getMap(), wsk_obs, gameView);
 
 
             //Draw and display the main window of application
-            app.clear(Color::White);
+            app.clear(sf::Color(30,44.7,10.6));
 
             app.draw(map.getMap());
 
@@ -193,18 +200,23 @@ void NewGame() {
             //app.draw(player.getSensor());
             app.setView(gameView);
             gameView.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 1.f));
-            time.update(app, "Time: " + win_status.str(), gameView.getCenter() - sf::Vector2f((app.getSize().x/2) - 20, (app.getSize().y/2) - 20));
+
+            time.update(app, "Time: " + win_status.str(), time_pos);
             app.display();
 
             //Game restart
             if (lose) {
                 
                 GameOver(win_status.str());
+                ShowWindow(handle, SW_MAXIMIZE);
+                time_pos = { 20,20 };
                 player.restart();
                 gameView.setCenter(app.getSize().x/2, app.getSize().y / 2);
                 lose = 0;
                 m = 0;
                 s = 0;
+                Right_click = 0;
+                Left_click = 0;
                 for (int i = 0; i < bots_how_many; i++)
                 {
                     bots[i].restart();
@@ -221,10 +233,13 @@ void NewGame() {
 }
 
 void GameOver(std::string record) {
-    Texts text("Game Over",sf::Vector2f(app.getSize().x / 2 - 90, app.getSize().y / 2 - 200),32);
-    Texts score("Your time: " + record,sf::Vector2f(app.getSize().x / 2 - 90, app.getSize().y / 2 - 100));
+    HWND handle = app.getSystemHandle(); 
+    ShowWindow(handle, SW_NORMAL);
+    app.clear();
+    Texts text("Game Over",sf::Vector2f(app.getSize().x / 2 - 120, app.getSize().y / 2 - 400),48);
+    Texts score("Your time: " + record,sf::Vector2f(app.getSize().x / 2 - 120, app.getSize().y / 2 - 200));
 
-    Button buttonEnd(app, "Exit", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)+50));
+    Button buttonEnd(app, "Exit", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2)+85));
     Button buttonTryAgain(app, "Try Again", sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2) + 10));
 
     while (app.isOpen())
@@ -239,10 +254,10 @@ void GameOver(std::string record) {
 
         app.setView(app.getDefaultView());
         app.clear(sf::Color(80, 80, 80));
-        buttonEnd.update(app);
-        buttonTryAgain.update(app);
-        score.update(app);
-        text.update(app);
+        buttonEnd.update(app, sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2) + 85));
+        buttonTryAgain.update(app, sf::Vector2f(app.getSize().x / 2, (app.getSize().y / 2) + 10));
+        score.update(app, sf::Vector2f(app.getSize().x / 2 - 120, app.getSize().y / 2 - 200));
+        text.update(app, sf::Vector2f(app.getSize().x / 2 - 120, app.getSize().y / 2 - 400));
         app.display();
         if (e.type == sf::Event::MouseButtonReleased)
         {

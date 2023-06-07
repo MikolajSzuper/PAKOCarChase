@@ -11,7 +11,7 @@ private:
 	bool hover=false;
 public:
 	Button(sf::RenderWindow& window,std::string txt,sf::Vector2f pos);
-	void update(sf::RenderWindow& window);
+	void update(sf::RenderWindow& window, sf::Vector2f pos);
 	bool isHover();
 };
 

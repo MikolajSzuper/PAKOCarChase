@@ -3,7 +3,7 @@
 Board::Board(std::string _tex) {
 	tex.loadFromFile(_tex);
 	background.setTexture(tex);
-	background.setScale(1.5,1.5);
+	background.setScale(2,2);
 }
 
 sf::Sprite& Board::getMap() {
