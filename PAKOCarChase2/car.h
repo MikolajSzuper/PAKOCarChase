@@ -12,7 +12,6 @@ protected:
     sf::Sprite model;
     sf::Vector2u border;
     sf::Vector2f sensor_pos;
-    sf::Vector2f _scale;
     float x, y;
     float prev_angle;
     float speed = 0, angle = 0;
@@ -23,7 +22,7 @@ protected:
     bool contact;
 public:
     bool stop = 1;
-    Car(std::string _tex, sf::Vector2u _border, sf::Vector2f scale);
+    Car(std::string _tex, sf::Vector2u _border);
     sf::Sprite& getPlayer();
     void Stop();
     bool Contact(sf::Sprite& obj);

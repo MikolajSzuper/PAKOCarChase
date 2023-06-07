@@ -1,13 +1,11 @@
 #include "car.h"
 
-Car::Car(std::string _tex, sf::Vector2u _border, sf::Vector2f scale) {
+Car::Car(std::string _tex, sf::Vector2u _border) {
     tex.loadFromFile(_tex);
     model.setTexture(tex);
-    model.setScale(scale.x*0.5, scale.y*0.5);
-    maxSpeed = maxSpeed+((maxSpeed / 3) * scale.x*scale.x*scale.x);
+    model.setScale(0.5, 0.5);
     model.setOrigin(46, 80);//99.5//36
     border = _border;
-    _scale = scale;
     sensor.setSize(sf::Vector2f(40, 50));
     sensor.setOrigin(sensor.getSize().x / 2, sensor.getSize().y / 2);
 }

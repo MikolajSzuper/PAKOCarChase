@@ -14,13 +14,7 @@ sf::Sprite& Obstacle::getObstacle() {
 
 void Obstacle::regenarateObstacle()
 {
-	pos.x = rand() % 2400*_scale.x;
-	pos.y = rand() % 2400 * _scale.y;
+	pos.x = rand() % 2400;
+	pos.y = rand() % 2400;
 	model.setPosition(pos);
-}
-
-void Obstacle::scaleing(sf::Vector2f scale)
-{
-	_scale = scale;
-	model.setScale(0.1*scale.x,0.1*scale.y);
 }

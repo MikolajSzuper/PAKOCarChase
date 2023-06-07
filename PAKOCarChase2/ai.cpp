@@ -1,10 +1,10 @@
 #include "ai.h"
 #include <iostream>
 
-Ai::Ai(std::string _tex, sf::Vector2u _border, sf::Vector2f scale) : Car(_tex, _border, scale)
+Ai::Ai(std::string _tex, sf::Vector2u _border) : Car(_tex, _border)
 {
-    pos.x = rand() % 2400*scale.x + 1200;
-    pos.y = rand() % 2400*scale.y + 1200;
+    pos.x = rand() % 2400 + 1200;
+    pos.y = rand() % 2400 + 1200;
     x = pos.x;
     y = pos.y;
     model.setPosition(pos);

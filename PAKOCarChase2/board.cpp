@@ -1,9 +1,9 @@
 #include "board.h"
 
-Board::Board(std::string _tex, sf::Vector2f scale) {
+Board::Board(std::string _tex) {
 	tex.loadFromFile(_tex);
 	background.setTexture(tex);
-	background.setScale(2*scale.x,2*scale.y);
+	background.setScale(2,2);
 }
 
 sf::Sprite& Board::getMap() {

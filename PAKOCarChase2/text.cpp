@@ -19,8 +19,9 @@ Texts::Texts(std::string txt, sf::Vector2f pos, int size)
     text.setString(txt);
 }
 
-void Texts::update(sf::RenderWindow& window)
+void Texts::update(sf::RenderWindow& window, sf::Vector2f pos)
 {
+    text.setPosition(pos);
 	window.draw(text);
 }
 
